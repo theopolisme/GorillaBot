@@ -171,7 +171,6 @@ class Connection(object):
         buffer = ''
         self._running = True
         while True:
-            now = time()
             try:
                 message = self._receive()
                 if message:
