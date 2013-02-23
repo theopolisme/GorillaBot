@@ -135,10 +135,7 @@ class Configure(object):
         
         if log_type != "none":                
             self.logger = logging.getLogger("GorillaBot")
-            if self._quiet:
-                self.logger.setLevel(logging.WARNING)
-            else:
-                self.logger.setLevel(logging.INFO)
+            self.logger.setLevel(logging.DEBUG)
             
             #Create the file logger
             if log_type != "console":   
@@ -165,6 +162,10 @@ class Configure(object):
                                                       ": %(message)s", datefmt="%I:%M:%S %p")
                 consolehandler = logging.StreamHandler() 
                 consolehandler.setFormatter(console_formatter)
+                if self._quiet:
+                    consolehandler.setLevel(logging.WARNING)
+                else:
+                    consolehandler.setLevel(logging.DEBUG)
                 self.logger.addHandler(consolehandler)
                 
                 self.logger.info("Console logger created.")

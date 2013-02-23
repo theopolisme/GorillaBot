@@ -63,7 +63,7 @@ class Connection(object):
         rep = "{0} is joining {1} on {2} on port {3}."
         return rep.format(self._nick, self._chans, self._host, self._port)
     
-    def _close(self, retry = False):
+    def _close(self, retry=False):
         '''End connection with IRC server, close socket.'''
         self._running = False
         if not retry:
@@ -86,8 +86,7 @@ class Connection(object):
         else:
             self._send("NICK {0}".format(self._nick))
             self._send("USER {0} {1} * :{2}".format(self._ident, self._host, self._realname))
-            for channel in self._chans:
-                self._send("JOIN {}".format(channel))
+            self.private_message("NickServ", "ACC", hide=False)
             self.loop()
             
     def _receive(self, size=4096):
@@ -160,7 +159,8 @@ class Connection(object):
         '''Join a channel.'''
         self.logger.info("Joining {}.".format(chan))
         self._send("JOIN {}".format(chan))
-        self._chans.append(chan)
+        if chan not in self._chans:
+            self._chans.append(chan)
     
     def loop(self):
         '''Main connection loop.'''

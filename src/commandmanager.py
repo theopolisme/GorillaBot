@@ -153,11 +153,19 @@ class CommandManager(object):
             self.logger.info("NickServ has requested identification.")
             self.con.nickserv_identify()
         elif "identified" in line:
+            # Successfully identified; join the initial list of channels given in the config
             self.con._password = self.con._tentative_password
             self.logger.info("You have successfully identified as {}.".format(line[2]))
+            for chan in self.con._chans:
+                self.con.join(chan)
         elif ":Invalid" in line:
             self.logger.info("You've entered an incorrect password. Please re-enter.")
             self.con.nickserv_identify()
+        elif line[4] == "ACC" and line[5] == "0":
+            # Nickname is not registered to NickServ; join initial list of channels given in config
+            for chan in self.con._chans:
+                self.con.join(chan)
+            
     
     def process_numcode(self, numcode, line):
         '''Parses a message with a reply code number and responds accordingly.'''
