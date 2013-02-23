@@ -5,8 +5,7 @@
   * Failsafe/limit so that if something goes wrong, the bot doesn't repeatedly disconnect and reconnect
 * ~~Kill switch in case something does go wrong with the bot~~
 * ~~Allow some modules to be loaded on request~~
-  * Learn new commands?
-* Gracefully exit on `KeyboardInterrupt`
+* ~~Gracefully exit on `KeyboardInterrupt`~~
 * `VERSION` reply
 * Check security
 * ~~Join channels after identifying to NickServ (to avoid issues with invite-only channels that depend on the cloak)~~
@@ -20,7 +19,7 @@
 * Allow part and quit commands to display a message as well
 * Allow command aliases
 * ~~Allow bot admins to be added and removed while the bot is live~~
-    * Store in config file?
+    * ~~Store in config file?~~
 * ~~Add regex matching to trigger commands (be sure to throttle)~~
 
 ##Plugins
