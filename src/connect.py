@@ -30,7 +30,7 @@ __all__ = ["Connection"]
 class Connection(object):
     '''Performs the connection to the IRC server and communicates with it.'''
     
-    def __init__(self, bot, host, port, nick, ident, realname, chans):
+    def __init__(self, bot, host, port, nick, ident, realname, chans, admins):
         '''Constructs the connection object. Sets up logging.'''
         self._bot = bot
         self._host = host
@@ -39,9 +39,9 @@ class Connection(object):
         self._ident = ident
         self._realname = realname
         self._chans = chans
+        self._admins = admins
         self._password = None
         self._commands = None
-        self.admins = ["GorillaWarfare"] # To be changed later
         self.logger = logging.getLogger("GorillaBot")
         
         self._last_sent = 0

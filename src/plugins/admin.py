@@ -23,7 +23,7 @@ import re
 def _is_admin(c, channel, line):
     '''Verify that the sender of a command is a bot admin.'''
     sender = c.get_sender(line)
-    if sender in c.con.admins:
+    if sender in c.con._admins:
         return True
     else:
         c.con.say("Ask a bot admin to perform this for you.", channel)
@@ -37,23 +37,32 @@ def addadmin(c, channel, command_type, line):
         if r:
             message = r.group(1).split()
             if len(message) == 1:
-                c.con.admins.append(message[0])
-                c.con.say("{} is now a bot admin.".format(message[0]), channel)
+                user = message[0]
+                if user in c.con._admins:
+                    c.con.say("{} is already a bot admin.".format(user), channel)
+                else:
+                    c.con._admins.append(user)
+                    c.con.say("{} is now a bot admin.".format(user), channel)
             else:
+                userlist = []
                 for user in message:
-                    c.con.admins.append(user)
-                users = ', '.join(message)
-                c.con.say("{} are now bot admins.".format(users), channel)
+                    if user in c.con._admins:
+                        c.con._admins.append(user)
+                        userlist.append(user)
+                    else:
+                        c.con.say("{} is already a bot admin.".format(user), channel)
+                userlist = ', '.join(userlist)
+                c.con.say("{} are now bot admins.".format(userlist), channel)
         else:
             c.con.say("Please specify which user to add.", channel)
             
             
 def adminlist(c, channel, command_type, line):
     '''Prints a list of bot administrators.'''
-    if len(c.con.admins) == 1:
-        c.con.say("My bot admin is {}.".format(c.con.admins[0]), channel)
+    if len(c.con._admins) == 1:
+        c.con.say("My bot admin is {}.".format(c.con._admins[0]), channel)
     else:
-        adminlist = ', '.join(c.con.admins)
+        adminlist = ', '.join(c.con._admins)
         c.con.say("My bot admins are: {}.".format(adminlist), channel)
 
 def join(c, channel, command_type, line):
@@ -90,6 +99,10 @@ def part(c, channel, command_type, line):
         else:
             c.con.say("Please specify which channel to part (as !part #channel).", channel)
         
+def ping(c, channel, command_type, line):
+    '''Simple way to check if the bot is still functioning.'''
+    c.con.say("Pong!", channel)
+        
 def quit(c, channel, command_type, line):
     '''Quits IRC, shuts down the bot.'''
     if _is_admin(c, channel, line):
@@ -107,12 +120,12 @@ def removeadmin(c, channel, command_type, line):
         if r:
             users = r.group(1).split()
             for user in users:
-                if user in c.con.admins:
-                    if len(c.con.admins) == 1:
+                if user in c.con._admins:
+                    if len(c.con._admins) == 1:
                         c.con.say("You are the only bot administrator. Please add another"
                                   " admin or disconnect the bot before removing yourself.", channel)
                         return 0
-                    c.con.admins.remove(user)
+                    c.con._admins.remove(user)
                 else:
                     c.con.say("{} is not on the list of bot admins.".format(user), channel)
                     users.remove(user)
