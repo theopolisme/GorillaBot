@@ -10,7 +10,7 @@
 * `VERSION` reply
 * Check security
 * ~~Join channels after identifying to NickServ (to avoid issues with invite-only channels that depend on the cloak)~~
-* Send initialize commands as a response to 004, not immediately
+* ~~Send initialize commands as a response to 004, not immediately~~
 * ~~Hook commands?~~
 * Add API section to config file
 * ~~Move string lists, etc. to a data file~~
