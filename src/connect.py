@@ -21,6 +21,7 @@
 
 import socket
 import logging
+import select
 from getpass import getpass
 from time import sleep, time
 
@@ -91,13 +92,16 @@ class Connection(object):
             
     def _receive(self, size=4096):
         '''Receive messages from the IRC server.'''
-        message = self._socket.recv(size)
-        if not message:
-            raise socket.error(0, "Socket connection broken.")
-            self.shut_down(True)
-            self._running = False
-            self.reconnect()
-        return message
+        message = ""
+        self._socket.setblocking(0)
+        ready = select.select([self._socket], [], [], 5)
+        if ready[0]:
+            try:
+                message = self._socket.recv(size)
+            except TimeoutError:
+                self.logger.exception("Operation timed out.")
+        if message != "":
+            return message
     
     def _reconnect(self):
         if self._reconnect_tries < 5 and self._try_reconnect == True:
@@ -167,12 +171,23 @@ class Connection(object):
         buffer = ''
         self._running = True
         while True:
+            now = time()
             try:
-                buffer += str(self._receive())
+                message = self._receive()
+                if message:
+                    buffer += str(message)
             except socket.error:
+                self.logger.exception("Socket error.")
                 self._running = False
                 self._reconnect()
                 break
+            except KeyboardInterrupt:
+                self.logger.info("Shut down by keyboard interrupt.")
+                self.shut_down()
+                break
+            except Exception as e:
+                self.logger.exception("Unexpected error: {}".format(e.strerror))
+                
             list_of_lines = buffer.split("\\r\\n")
             buffer = list_of_lines.pop()
             for line in list_of_lines:
