@@ -83,7 +83,7 @@ def emergencyshutoff(c, channel, command_type, line):
         sender = c.get_sender(line)
         c.logger.error("Emergency shutdown requested by {}.".format(sender))
         c.con.say("Shutting down.", channel)
-        c.con.shut_down()
+        c.con.shut_down("Emergency shutoff", False)
     else:
         c.con.say("Please send this as a private message to shut me down.", channel)
 
@@ -106,7 +106,12 @@ def ping(c, channel, command_type, line):
 def quit(c, channel, command_type, line):
     '''Quits IRC, shuts down the bot.'''
     if _is_admin(c, channel, line):
-        c.con.shut_down()
+        regex = re.compile("!?quit\s?(.+)?", re.IGNORECASE)
+        r = re.search(regex, line)
+        if r:
+            c.con.shut_down(r.group(1), False)
+        else:
+            c.con.shut_down("", False)
 
 def shutdown(c, channel, command_type, line):
     '''Alias for quit'''

@@ -152,7 +152,7 @@ class Connection(object):
                 self.ping()
             elif now - self._last_ping_sent > 60:
                 self.logger.info("No ping response in 60 seconds.")
-                self.shut_down(True)
+                self.shut_down("Pinged out.", True)
             
     def dispatch(self, line):
         '''Process lines received.'''
@@ -182,7 +182,7 @@ class Connection(object):
                 break
             except KeyboardInterrupt:
                 self.logger.info("Shut down by keyboard interrupt.")
-                self.shut_down()
+                self.shut_down("Quit", False)
                 break
             except Exception as e:
                 self.logger.exception("Unexpected error: {}".format(e.strerror))
@@ -212,11 +212,11 @@ class Connection(object):
             self.private_message("NickServ", "IDENTIFY {0} {1}".format(self._nick, self._password),
                                  True)
 
-    def part(self, chan):
+    def part(self, chan, message):
         '''Part from an IRC channel.'''
         if chan[0] == "#" and chan in self._chans:
             self.logger.info("Parting from {}.".format(chan))
-            self._send("PART {}".format(chan))
+            self._send("PART {0} :{1}".format(chan, message))
             self._chans.remove(chan)
             
     def ping(self):
@@ -236,17 +236,20 @@ class Connection(object):
             privmsg = "PRIVMSG {0} :{1}".format(target, msg)
             self._send(privmsg, hide)
               
-    def quit(self):
+    def quit(self, message=None):
         '''Disconnect from the server.'''
-        self._send("QUIT")
-            
+        if message:
+            self._send("QUIT :{}".format(message))
+        else:
+            self._send("QUIT")    
     def say(self, message, channel):
         '''Say something to the channel or in a private message to the user
         that sent a command.'''
         self.private_message(channel, message)
         
-    def shut_down(self, retry=False):
+    def shut_down(self, message=None, retry=False):
         '''Gracefully shuts down.'''
         self.logger.info("Shutting down.")
-        self.quit()
+        self.quit(message)
+        print(message)
         self._close(retry)

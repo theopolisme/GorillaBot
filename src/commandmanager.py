@@ -187,8 +187,7 @@ class CommandManager(object):
             # ERR_NICKNAMEINUSE - Nickname is already in use.
             # TODO: Change response to something more productive than shutting down.
             self.logger.error("Nickname is already in use. Closing connection.")
-            self.con.quit()
-            self.con.shut_down()
+            self.con.shut_down("Nickname in use.", False)
         elif numcode == "442":
             # ERR_NOTONCHANNEL - You're not in that channel
             self.logger.info("You tried to part from {}, but you are not in that "
