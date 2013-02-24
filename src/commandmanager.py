@@ -19,6 +19,7 @@
 # SOFTWARE.
 
 from inspect import getmembers, isfunction
+from __init__ import __version__
 from time import time
 import logging
 import re
@@ -42,11 +43,18 @@ class CommandManager(object):
     def check_command(self, line):
         '''Messages of type PRIVMSG will be passed through this function to check if they are
         commands.'''
+
+        if "VERSION" in line[3]:
+            #Respond to CTCP VERSION request
+            self.con._send("NOTICE {0} :\001VERSION GorillaBot {1} - http://git.io/q1f-cw\001"
+                           .format("GorillaWarfare", __version__))
+            return
+        
         # Separates the line into its four parts
         line_string = " ".join(line)
         line_string = line_string.replace("\"", "")
         line_string = line_string.replace("\'", "")
-        print(line_string)
+
         parser = re.compile("(?:\S+?:(\S+)!\S+\s)?([A-Z]+)\s(?:([^:]+)\s)?(?::(.+))?")
         r = re.search(parser, line_string)
         channel = r.group(3)
@@ -58,8 +66,8 @@ class CommandManager(object):
             if channel == self._bot_nick:
                 private = True
             else:
-                private = False
-                
+                private = False  
+            
             command = ""
             command_type = ""
             command_regex = re.compile("(?:!(\S+))",re.IGNORECASE)

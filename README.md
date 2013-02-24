@@ -5,6 +5,7 @@ Although I wrote the framework to run _AlfredBot_, a bot specific to an IRC chan
 
 __Author:__ Molly White<br />
 __License:__ [MIT](http://opensource.org/licenses/MIT)<br/>
+__Version:__ 0.1.2
 __Status:__ Unstable
 
 ## Installation

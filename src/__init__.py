@@ -17,3 +17,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+'''
+GorillaBot (https://github.com/mollywhite/GorillaBot/) is a Python IRC bot framework. 
+
+An overview of the bot is available at http://git.io/UiIzqQ, and a description of the
+bot's commands is available at http://git.io/pNQS6g.
+'''
+
+__author__ = "Molly White"
+__copyright__ = "Copyright (c) 2013 Molly White"
+__credits__ = ["Molly White", "Oliver Keyes"]
+__license__ = "MIT License"
+__version__ = "0.1.2"
+
+def get_version(self):
+    return __version__
