@@ -239,7 +239,7 @@ class Connection(object):
     def quit(self, message=None):
         '''Disconnect from the server.'''
         if message:
-            self._send("QUIT :{}".format(message))
+            self._send("QUIT :[{}]".format(message))
         else:
             self._send("QUIT")    
     def say(self, message, channel):

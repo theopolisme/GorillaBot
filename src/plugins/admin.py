@@ -90,12 +90,16 @@ def emergencyshutoff(c, channel, command_type, line):
 def part(c, channel, command_type, line):
     '''Part a list of channels.'''
     if _is_admin(c, channel, line):
-        regex = re.compile("!?part\s(.*)",re.IGNORECASE)
+        regex = re.compile("!?part\s((?:#\S+\s)+)([^#]*)",re.IGNORECASE)
         r = re.search(regex, line)
         if r:
+            print(r.groups())
             chans = r.group(1).split()
             for chan in chans:
-                c.con.part(chan)
+                if r.group(2):
+                    c.con.part(chan, r.group(2))
+                else:
+                    c.con.part(chan)
         else:
             c.con.say("Please specify which channel to part (as !part #channel).", channel)
         
