@@ -1,13 +1,13 @@
 # To do
 
 ##General
-* Reconnect after the bot is disconnected from the server or the socket is closed
-  * Failsafe/limit so that if something goes wrong, the bot doesn't repeatedly disconnect and reconnect
+* ~~Reconnect after the bot is disconnected from the server or the socket is closed~~
+  * ~~Failsafe/limit so that if something goes wrong, the bot doesn't repeatedly disconnect and reconnect~~
 * ~~Kill switch in case something does go wrong with the bot~~
 * ~~Allow some modules to be loaded on request~~
 * ~~Gracefully exit on `KeyboardInterrupt`~~
-* `VERSION` reply
-* Check security
+* ~~`VERSION` reply~~
+* ~~Check security~~
 * ~~Join channels after identifying to NickServ (to avoid issues with invite-only channels that depend on the cloak)~~
 * ~~Send initialize commands as a response to 004, not immediately~~
 * ~~Hook commands?~~
